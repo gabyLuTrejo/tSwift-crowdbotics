@@ -9,10 +9,22 @@ const loadPage = function(){
   $.getJSON(api.songs, function(response){
       var taylorSongs = response.results;
       console.log(taylorSongs);
-      printSong(taylorSongs);
+      console.log(noRepeat(taylorSongs));
+      printSong(noRepeat(taylorSongs));
   });
-
 };
+
+function noRepeat(songs) {
+  return songs.reduce(function (index, song) {
+    var key = [song.trackName].join('|');
+    if (index.temp.indexOf(key) === -1) {
+      index.out.push(song);
+      index.temp.push(key);
+    }
+    return index;
+  }, { temp: [], out: [] }).out;
+}
+
 function printSong(taylorSongs){
   // var songData = document.createElement(songInfo);
   taylorSongs.forEach(function(song, number){
@@ -44,7 +56,6 @@ function printSong(taylorSongs){
         $(this).css("background-color", "#fff");
   });
 };
-
 
 
 $(document).ready(loadPage);
